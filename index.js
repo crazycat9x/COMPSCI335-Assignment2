@@ -1,10 +1,10 @@
-const categoryEnum = {
+const categoryEnum = Object.freeze({
   home: "home",
   courses: "courses",
   news: "news",
   notices: "notices",
   people: "people"
-};
+});
 
 const getUrls = {
   [categoryEnum.courses]: {
@@ -32,9 +32,9 @@ const applyToAll = (query, func) =>
 
 const createHtmlElement = ({ type, id, className, content }) => {
   const element = document.createElement(type || "div");
-  element.id = id || "";
-  element.className = className || "";
-  element.innerHTML = content || "";
+  id && (element.id = id);
+  className && (element.className = className);
+  content && (element.innerHTML = content);
   return element;
 };
 
@@ -97,6 +97,7 @@ const createCard = ({ title, subtitle, content = "N/A", linkTo }) => {
   return card;
 };
 
+// add event listener to nav buttons
 [...document.getElementsByClassName("nav-button")].forEach(button =>
   button.addEventListener("click", function() {
     navToPage(this.id.slice(this.id.lastIndexOf("-") + 1));
