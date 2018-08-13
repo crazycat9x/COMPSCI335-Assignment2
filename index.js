@@ -33,6 +33,7 @@ const pageTitle = document.getElementById("title");
 const pageContainer = document.getElementById("page-container");
 const mainNavBar = document.getElementById("main-nav");
 const navToggleButton = document.getElementById("toggle-nav-button");
+let loadCheck = 0;
 
 const reqwest = (type, url, async = true) =>
   new Promise((resolve, reject) => {
@@ -75,6 +76,7 @@ const createHtmlElement = ({
 
 const navToPage = async pageName => {
   const page = document.createDocumentFragment();
+  const thisLoadCheck = ++loadCheck;
   let data;
   pageContainer.innerHTML = "";
   title.innerText = pageName;
@@ -100,9 +102,7 @@ const navToPage = async pageName => {
       await renderPeopleToPage(JSON.parse(data).list, page);
       break;
   }
-  pageContainer.innerHTML = "";
-  title.innerText = pageName;
-  pageContainer.appendChild(page);
+  thisLoadCheck == loadCheck && pageContainer.appendChild(page);
 };
 
 const createCard = ({ title, subtitle, content = "N/A", linkTo }) => {
