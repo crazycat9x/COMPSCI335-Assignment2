@@ -7,6 +7,9 @@ const categoryEnum = Object.freeze({
 });
 
 const getUrls = {
+  [categoryEnum.home]: {
+    all: null
+  },
   [categoryEnum.courses]: {
     all: "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc/courses",
     single: "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc/course?c="
@@ -26,6 +29,26 @@ const getUrls = {
 };
 
 const postComment = "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc";
+const pageContainer = document.getElementById("page-container");
+const mainNavBar = document.getElementById("main-nav");
+const navToggleButton = document.getElementById("toggle-nav-button");
+
+const reqwest = (type, url, callback) =>
+  new Promise(resolve => {
+    const request = new XMLHttpRequest();
+    request.open(type, url, true);
+    request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader("Accept", "application/json");
+    request.onload = function() {
+      if (this.status >= 200 && this.status < 400) {
+        resolve(this.response);
+        callback && callback(this.response);
+      } else {
+        console.log(this.response);
+      }
+    };
+    request.send();
+  });
 
 const applyToAll = (query, func) =>
   [...document.querySelectorAll(query)].forEach(func);
@@ -50,27 +73,34 @@ const createHtmlElement = ({
   return element;
 };
 
-const renderDataToPage = (data, pageName) => {
+const navToPage = pageName => {
+  applyToAll(".nav-button", e => e.classList.remove("active"));
+  pageContainer.innerHTML = "";
   switch (pageName) {
+    case categoryEnum.home:
+      renderHomePage();
+      break;
     case categoryEnum.courses:
-      renderCoursesToPage(data);
+      reqwest("GET", getUrls[pageName].all).then(data =>
+        renderCoursesToPage(JSON.parse(data).data)
+      );
       break;
     case categoryEnum.news:
-      renderNewsToPage(data);
+      reqwest("GET", getUrls[pageName].all).then(data =>
+        renderNewsToPage(JSON.parse(data))
+      );
       break;
     case categoryEnum.notices:
-      renderNoticesToPage(data);
+      reqwest("GET", getUrls[pageName].all).then(data =>
+        renderNoticesToPage(JSON.parse(data))
+      );
       break;
     case categoryEnum.people:
-      renderPeopleToPage(data);
+      reqwest("GET", getUrls[pageName].all).then(data =>
+        renderPeopleToPage(JSON.parse(data).list)
+      );
       break;
   }
-};
-
-const navToPage = pageId => {
-  applyToAll(".page", e => (e.style.display = "none"));
-  applyToAll(".nav-button", e => e.classList.remove("active"));
-  document.getElementById(pageId).style.display = "block";
 };
 
 const createCard = ({ title, subtitle, content = "N/A", linkTo }) => {
@@ -151,60 +181,40 @@ const createProfileCard = ({ name, img, role, email, phoneNum, vcard }) => {
   return card;
 };
 
-const navToggleButton = document.getElementById("toggle-nav-button");
-
+// add event listener to navigation toggle button
 navToggleButton.addEventListener("click", function() {
   document.getElementById("main-nav").classList.toggle("active");
   this.classList.toggle("active");
   [...this.children].forEach(child => {
     child.classList.toggle("active");
   });
-  
 });
 
-// add event listener to nav buttons
-[...document.getElementsByClassName("nav-item")].forEach(button =>
+// add event listener to navigation items
+Object.keys(categoryEnum).forEach(cat => {
+  const button = createHtmlElement({
+    className: "nav-item",
+    content: cat.toLocaleUpperCase()
+  });
   button.addEventListener("click", function() {
     applyToAll(".nav-item", e => e.classList.remove("active"));
     this.classList.add("active");
-    navToPage(this.id.slice(this.id.lastIndexOf("-") + 1));
+    navToPage(cat);
     navToggleButton.click();
-  })
-);
-
-const reqwest = (type, url, callback) =>
-  new Promise(resolve => {
-    const request = new XMLHttpRequest();
-    request.open(type, url, true);
-    request.setRequestHeader("Content-Type", "application/json");
-    request.setRequestHeader("Accept", "application/json");
-    request.onload = function() {
-      if (this.status >= 200 && this.status < 400) {
-        resolve(this.response);
-        callback && callback(this.response);
-      } else {
-        console.log(this.response);
-      }
-    };
-    request.send();
   });
-
-Object.entries(getUrls).forEach(stateNameAndUrl => {
-  reqwest("GET", stateNameAndUrl[1].all, data =>
-    renderDataToPage(JSON.parse(data), stateNameAndUrl[0])
-  );
+  mainNavBar.appendChild(button);
 });
 
-function renderCoursesToPage(data) {
-  data = data.data;
-  const target = document.getElementById(categoryEnum.courses);
+const renderHomePage = () => {};
+
+const renderCoursesToPage = data =>
   data
     .sort(
       (a, b) =>
         a.catalogNbr < b.catalogNbr ? -1 : a.catalogNbr > b.catalogNbr ? 1 : 0
     )
     .forEach(course =>
-      target.appendChild(
+      pageContainer.appendChild(
         createCard({
           title: `${course.subject} ${course.catalogNbr}`,
           subtitle: course.titleLong,
@@ -212,12 +222,10 @@ function renderCoursesToPage(data) {
         })
       )
     );
-}
 
-function renderNewsToPage(data) {
-  const target = document.getElementById(categoryEnum.news);
+const renderNewsToPage = data =>
   data.forEach(newItem =>
-    target.appendChild(
+    pageContainer.appendChild(
       createCard({
         title: newItem.titleField,
         subtitle: newItem.pubDateField,
@@ -226,12 +234,10 @@ function renderNewsToPage(data) {
       })
     )
   );
-}
 
-function renderNoticesToPage(data) {
-  const target = document.getElementById(categoryEnum.notices);
+const renderNoticesToPage = data =>
   data.forEach(notice =>
-    target.appendChild(
+    pageContainer.appendChild(
       createCard({
         title: notice.titleField,
         subtitle: notice.pubDateField,
@@ -240,11 +246,8 @@ function renderNoticesToPage(data) {
       })
     )
   );
-}
 
-async function renderPeopleToPage(data) {
-  const target = document.getElementById(categoryEnum.people);
-  data = data.list;
+const renderPeopleToPage = async data => {
   for (const person of data) {
     const details = JSON.parse(
       await reqwest(
@@ -252,9 +255,9 @@ async function renderPeopleToPage(data) {
         `${getUrls[categoryEnum.people].single}${person.profileUrl[0]}`
       )
     );
-    target.appendChild(
+    pageContainer.appendChild(
       createProfileCard({
-        name: `${person.title} ${person.names[0]}`,
+        name: `${person.title ? person.title + " " : ""}${person.names[0]}`,
         img: `${getUrls[categoryEnum.people].img}${details.image}`,
         role: person.jobtitles.join("</br>"),
         email: person.emailAddresses[0],
@@ -263,4 +266,4 @@ async function renderPeopleToPage(data) {
       })
     );
   }
-}
+};
