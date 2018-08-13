@@ -6,6 +6,8 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
+  min-height: 100vh;
+  position: relative;
 }
 
 h1,
@@ -46,10 +48,10 @@ button:active {
   justify-content: space-between;
   align-items: center;
   padding: 0 10px 0 10px;
-  text-transform:capitalize;
+  text-transform: capitalize;
 }
 
-#logo{
+#logo {
   height: 80%;
 }
 
@@ -127,6 +129,13 @@ button:active {
   justify-items: center;
 }
 
+#auckland {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+}
+
 .nav-item {
   text-align: center;
   color: white;
@@ -134,7 +143,7 @@ button:active {
   transition: 0.1s ease;
   transition-property: transform;
   cursor: pointer;
-  text-transform:capitalize;
+  text-transform: capitalize;
 }
 
 .nav-item.active,
@@ -156,6 +165,7 @@ button:active {
 
 .card-section {
   /* min-height: 266px; */
+  background-color: white;
   margin-bottom: 36px;
   padding: 0;
   border: 1px solid rgba(0, 0, 0, 0.12);
