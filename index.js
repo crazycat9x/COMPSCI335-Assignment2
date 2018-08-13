@@ -97,10 +97,22 @@ const createCard = ({ title, subtitle, content = "N/A", linkTo }) => {
   return card;
 };
 
+const navToggleButton = document.getElementById("toggle-nav-button");
+
+navToggleButton.addEventListener("click", function() {
+  document.getElementById("main-nav").classList.toggle("open");
+  [...this.children].forEach(child => {
+    child.classList.toggle("open");
+  });
+});
+
 // add event listener to nav buttons
-[...document.getElementsByClassName("nav-button")].forEach(button =>
+[...document.getElementsByClassName("nav-item")].forEach(button =>
   button.addEventListener("click", function() {
+    applyToAll(".nav-item", e => e.classList.remove("active"));
+    this.classList.add("active");
     navToPage(this.id.slice(this.id.lastIndexOf("-") + 1));
+    navToggleButton.click();
   })
 );
 
