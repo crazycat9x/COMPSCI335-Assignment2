@@ -3,7 +3,8 @@ const categoryEnum = Object.freeze({
   courses: "courses",
   news: "news",
   notices: "notices",
-  people: "people"
+  people: "people",
+  comments: "comments"
 });
 
 const getUrls = {
@@ -25,9 +26,15 @@ const getUrls = {
     single: "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc/person?u=",
     img: "https://unidirectory.auckland.ac.nz/",
     vcard: "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc/vcard?u="
+  },
+  [categoryEnum.comments]: {
+    all: "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc/htmlcomments",
+    post:
+      "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc/comment?name="
   }
 };
 
+const parser = new DOMParser();
 const postComment = "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc";
 const pageTitle = document.getElementById("title");
 const pageContainer = document.getElementById("page-container");
@@ -36,11 +43,10 @@ const navToggleButton = document.getElementById("toggle-nav-button");
 const spinner = document.getElementById("spinner");
 let concurrencyCheck = 0;
 
-const reqwest = (type, url, async = true) =>
+const reqwest = (type, url, data = null, async = true) =>
   new Promise((resolve, reject) => {
     const request = new XMLHttpRequest();
     request.open(type, url, async);
-    request.setRequestHeader("Content-Type", "application/json");
     request.setRequestHeader("Accept", "application/json");
     request.onload = function() {
       if (this.status >= 200 && this.status < 400) {
@@ -49,7 +55,7 @@ const reqwest = (type, url, async = true) =>
         reject(this.response);
       }
     };
-    request.send();
+    request.send(data);
   });
 
 const applyToAll = (query, func) =>
@@ -67,7 +73,14 @@ const createHtmlElement = ({
   className && Array.isArray(className)
     ? className.forEach(name => element.classList.add(name))
     : element.classList.add(className);
-  content && (element.innerHTML = content);
+  switch (typeof content) {
+    case "string":
+      element.innerHTML = content;
+      break;
+    case "object":
+      element.appendChild(content);
+      break;
+  }
   additionalAttr &&
     Object.entries(additionalAttr).forEach(attr =>
       element.setAttribute(attr[0], attr[1])
@@ -102,6 +115,11 @@ const navToPage = async pageName => {
     case categoryEnum.people:
       data = await reqwest("GET", getUrls[pageName].all);
       await renderPeopleToPage(JSON.parse(data).list, page);
+      break;
+    case categoryEnum.comments:
+      data = await reqwest("GET", getUrls[pageName].all);
+      data = parser.parseFromString(data, "text/html");
+      renderCommentsToPage(data, page);
       break;
   }
   thisLoadCheck == concurrencyCheck &&
@@ -264,6 +282,22 @@ const renderPeopleToPage = (data, page) => {
       )
   );
   return Promise.all(promises);
+};
+
+const renderCommentsToPage = (data, page) => {
+  [...data.querySelectorAll("p")]
+    .map(comment => ({
+      author: comment.querySelector("b"),
+      message: comment.querySelector("em")
+    }))
+    .forEach(comment => {
+      page.appendChild(
+        createHtmlElement({ type: "h3", content: comment.author })
+      );
+      page.appendChild(
+        createHtmlElement({ type: "h5", content: comment.message })
+      );
+    });
 };
 
 // add event listener to navigation toggle button
