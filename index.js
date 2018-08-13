@@ -208,12 +208,14 @@ const createProfileCard = ({ name, img, role, email, phoneNum, vcard }) => {
 const renderHomePage = page => {
   page.appendChild(
     createHtmlElement({
+      className: "big-title",
       type: "h1",
-      content: "Welcome to the Department of Computer Science"
+      content: "Department of Computer Science"
     })
   );
   page.appendChild(
     createHtmlElement({
+      className: "big-subtitle",
       type: "h3",
       content:
         "Welcome to New Zealand's leading computer science department. We pride ourselves on the excellence of our staff and our students."
@@ -309,7 +311,7 @@ navToggleButton.addEventListener("click", function() {
   });
 });
 
-// add event listener to navigation items
+// create navigation items
 Object.keys(categoryEnum).forEach(cat => {
   const button = createHtmlElement({
     className: "nav-item",

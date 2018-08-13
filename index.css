@@ -1,3 +1,8 @@
+:root {
+  --main-color: #0039a6;
+  --secondary-color: #002772;
+}
+
 body {
   margin: 0;
   font-family: system, -apple-system, BlinkMacSystemFont, "Helvetica Neue",
@@ -16,16 +21,16 @@ h3,
 h4,
 h5,
 h6 {
-  margin: 0 0 3px 0;
+  margin: 0 0 0.25rem 0;
 }
 
 button {
-  background-color: #0039a6;
+  background-color: var(--main-color);
   color: white;
-  font-size: 18px;
+  font-size: 1.25rem;
   border: none;
   border-radius: 15px;
-  padding: 3px;
+  padding: 0.35rem;
   text-align: center;
   cursor: pointer;
   outline: none;
@@ -35,15 +40,11 @@ button:active {
   transform: translateY(2px);
 }
 
-:root {
-  --main-color: #0039a6;
-}
-
 #title-bar {
-  background-color: #002772;
+  background-color: var(--secondary-color);
   color: white;
-  font-size: 30px;
-  height: 50px;
+  font-size: 1.75rem;
+  height: 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -62,7 +63,7 @@ button:active {
   flex-direction: column;
   justify-content: center;
   height: 100vh;
-  background-color: #0039a6;
+  background-color: var(--main-color);
   width: 15rem;
   top: 0;
   left: -15rem;
@@ -90,13 +91,14 @@ button:active {
   width: 35px;
   height: 35px;
   cursor: pointer;
-  background-color: var(--main-color);
+  background-color: var(--secondary-color);
   border-radius: 50%;
-  box-shadow: 0 1px 1px 0 rgba(60, 64, 67, 0.08),
+  box-shadow: 0 2px 2px 0 rgba(60, 64, 67, 0.08),
     0 1px 3px 1px rgba(60, 64, 67, 0.16);
 }
 
 #toggle-nav-button.active {
+  background-color: var(--main-color);
   border: none;
   box-shadow: none;
 }
@@ -158,6 +160,14 @@ button:active {
   z-index: -1;
 }
 
+.big-title, .big-subtitle {
+  text-align: center;
+}
+
+.big-title {
+  margin-top: 1rem;
+}
+
 .nav-item {
   text-align: center;
   color: white;
@@ -170,7 +180,7 @@ button:active {
 
 .nav-item.active,
 .nav-item:hover {
-  background-color: #002772;
+  background-color: var(--secondary-color);
   transform: scale(1.05);
   box-shadow: 0 1px 1px 0 rgba(60, 64, 67, 0.08),
     0 1px 3px 1px rgba(60, 64, 67, 0.16);
@@ -239,7 +249,7 @@ button:active {
 }
 
 .profile-title {
-  background-color: #0039a6;
+  background-color: var(--main-color);
   display: flex;
   color: white;
   flex-direction: column;
@@ -258,7 +268,7 @@ button:active {
 }
 
 .vcard-button {
-  background-color: #0039a6;
+  background-color: var(--main-color);
   color: white;
   width: 100%;
   font-size: 18px;
