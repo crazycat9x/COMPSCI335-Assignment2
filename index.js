@@ -76,8 +76,8 @@ const createHtmlElement = ({
 const navToPage = async pageName => {
   const page = document.createDocumentFragment();
   let data;
-  title.innerText = pageName;
   pageContainer.innerHTML = "";
+  title.innerText = pageName;
   applyToAll(".nav-button", e => e.classList.remove("active"));
   switch (pageName) {
     case categoryEnum.home:
@@ -100,6 +100,8 @@ const navToPage = async pageName => {
       await renderPeopleToPage(JSON.parse(data).list, page);
       break;
   }
+  pageContainer.innerHTML = "";
+  title.innerText = pageName;
   pageContainer.appendChild(page);
 };
 
