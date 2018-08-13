@@ -247,23 +247,23 @@ const renderNoticesToPage = data =>
     )
   );
 
-const renderPeopleToPage = async data => {
-  for (const person of data) {
-    const details = JSON.parse(
-      await reqwest(
-        "GET",
-        `${getUrls[categoryEnum.people].single}${person.profileUrl[0]}`
-      )
-    );
-    pageContainer.appendChild(
-      createProfileCard({
-        name: `${person.title ? person.title + " " : ""}${person.names[0]}`,
-        img: `${getUrls[categoryEnum.people].img}${details.image}`,
-        role: person.jobtitles.join("</br>"),
-        email: person.emailAddresses[0],
-        phoneNum:
-          details.phoneNumbers.length != 0 && details.phoneNumbers[0].phone
-      })
-    );
-  }
-};
+const renderPeopleToPage = data =>
+  data.forEach(person => {
+    reqwest(
+      "GET",
+      `${getUrls[categoryEnum.people].single}${person.profileUrl[0]}`
+    )
+      .then(response => JSON.parse(response))
+      .then(details =>
+        pageContainer.appendChild(
+          createProfileCard({
+            name: `${person.title ? person.title + " " : ""}${person.names[0]}`,
+            img: `${getUrls[categoryEnum.people].img}${details.image}`,
+            role: person.jobtitles.join("</br>"),
+            email: person.emailAddresses[0],
+            phoneNum:
+              details.phoneNumbers.length != 0 && details.phoneNumbers[0].phone
+          })
+        )
+      );
+  });
