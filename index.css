@@ -1,5 +1,5 @@
 body {
-  padding: 10px;
+  margin: 0;
   font-family: system, -apple-system, BlinkMacSystemFont, "Helvetica Neue",
     "Lucida Grande";
 
@@ -35,6 +35,22 @@ button:active {
 
 :root {
   --main-color: #0039a6;
+}
+
+#title-bar {
+  background-color: #002772;
+  color: white;
+  font-size: 30px;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10px 0 10px;
+  text-transform:capitalize;
+}
+
+#logo{
+  height: 80%;
 }
 
 #main-nav {
@@ -104,6 +120,13 @@ button:active {
   background-color: white;
 }
 
+#page-container {
+  padding: 15px 10px 15px 10px;
+  display: flex;
+  flex-direction: column;
+  justify-items: center;
+}
+
 .nav-item {
   text-align: center;
   color: white;
@@ -111,6 +134,7 @@ button:active {
   transition: 0.1s ease;
   transition-property: transform;
   cursor: pointer;
+  text-transform:capitalize;
 }
 
 .nav-item.active,

@@ -29,6 +29,7 @@ const getUrls = {
 };
 
 const postComment = "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc";
+const pageTitle = document.getElementById("title");
 const pageContainer = document.getElementById("page-container");
 const mainNavBar = document.getElementById("main-nav");
 const navToggleButton = document.getElementById("toggle-nav-button");
@@ -74,8 +75,9 @@ const createHtmlElement = ({
 };
 
 const navToPage = pageName => {
-  applyToAll(".nav-button", e => e.classList.remove("active"));
+  title.innerText = pageName;
   pageContainer.innerHTML = "";
+  applyToAll(".nav-button", e => e.classList.remove("active"));
   switch (pageName) {
     case categoryEnum.home:
       renderHomePage();
@@ -181,31 +183,21 @@ const createProfileCard = ({ name, img, role, email, phoneNum, vcard }) => {
   return card;
 };
 
-// add event listener to navigation toggle button
-navToggleButton.addEventListener("click", function() {
-  document.getElementById("main-nav").classList.toggle("active");
-  this.classList.toggle("active");
-  [...this.children].forEach(child => {
-    child.classList.toggle("active");
-  });
-});
-
-// add event listener to navigation items
-Object.keys(categoryEnum).forEach(cat => {
-  const button = createHtmlElement({
-    className: "nav-item",
-    content: cat.toLocaleUpperCase()
-  });
-  button.addEventListener("click", function() {
-    applyToAll(".nav-item", e => e.classList.remove("active"));
-    this.classList.add("active");
-    navToPage(cat);
-    navToggleButton.click();
-  });
-  mainNavBar.appendChild(button);
-});
-
-const renderHomePage = () => {};
+const renderHomePage = () => {
+  pageContainer.appendChild(
+    createHtmlElement({
+      type: "h1",
+      content: "Welcome to the Department of Computer Science"
+    })
+  );
+  pageContainer.appendChild(
+    createHtmlElement({
+      type: "h3",
+      content:
+        "Welcome to New Zealand's leading computer science department. We pride ourselves on the excellence of our staff and our students."
+    })
+  );
+};
 
 const renderCoursesToPage = data =>
   data
@@ -247,7 +239,9 @@ const renderNoticesToPage = data =>
     )
   );
 
-const renderPeopleToPage = data =>
+const renderPeopleToPage = data => {
+  const loadingDataContainer = createHtmlElement({});
+  pageContainer.appendChild(loadingDataContainer);
   data.forEach(person => {
     reqwest(
       "GET",
@@ -255,7 +249,7 @@ const renderPeopleToPage = data =>
     )
       .then(response => JSON.parse(response))
       .then(details =>
-        pageContainer.appendChild(
+        loadingDataContainer.appendChild(
           createProfileCard({
             name: `${person.title ? person.title + " " : ""}${person.names[0]}`,
             img: `${getUrls[categoryEnum.people].img}${details.image}`,
@@ -267,3 +261,33 @@ const renderPeopleToPage = data =>
         )
       );
   });
+};
+
+// add event listener to navigation toggle button
+navToggleButton.addEventListener("click", function() {
+  mainNavBar.classList.toggle("active");
+  this.classList.toggle("active");
+  [...this.children].forEach(child => {
+    child.classList.toggle("active");
+  });
+});
+
+// add event listener to navigation items
+Object.keys(categoryEnum).forEach(cat => {
+  const button = createHtmlElement({
+    className: "nav-item",
+    id: `link-to-${cat}`,
+    content: cat
+  });
+  button.addEventListener("click", function() {
+    applyToAll(".nav-item", e => e.classList.remove("active"));
+    this.classList.add("active");
+    navToPage(cat);
+    navToggleButton.click();
+  });
+  mainNavBar.appendChild(button);
+});
+
+document.getElementById("link-to-home").classList.toggle("active");
+title.innerText = "home";
+renderHomePage();
