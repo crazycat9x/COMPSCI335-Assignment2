@@ -129,6 +129,28 @@ button:active {
   justify-items: center;
 }
 
+#spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  margin: -40px 0 0 -40px;
+  border: 10px solid var(--main-color);
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 1.5s ease infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 #auckland {
   position: absolute;
   bottom: 0;

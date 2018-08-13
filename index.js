@@ -33,7 +33,8 @@ const pageTitle = document.getElementById("title");
 const pageContainer = document.getElementById("page-container");
 const mainNavBar = document.getElementById("main-nav");
 const navToggleButton = document.getElementById("toggle-nav-button");
-let loadCheck = 0;
+const spinner = document.getElementById("spinner");
+let concurrencyCheck = 0;
 
 const reqwest = (type, url, async = true) =>
   new Promise((resolve, reject) => {
@@ -76,10 +77,11 @@ const createHtmlElement = ({
 
 const navToPage = async pageName => {
   const page = document.createDocumentFragment();
-  const thisLoadCheck = ++loadCheck;
+  const thisLoadCheck = ++concurrencyCheck;
   let data;
   pageContainer.innerHTML = "";
   title.innerText = pageName;
+  spinner.style.display = "block";
   applyToAll(".nav-button", e => e.classList.remove("active"));
   switch (pageName) {
     case categoryEnum.home:
@@ -102,7 +104,9 @@ const navToPage = async pageName => {
       await renderPeopleToPage(JSON.parse(data).list, page);
       break;
   }
-  thisLoadCheck == loadCheck && pageContainer.appendChild(page);
+  thisLoadCheck == concurrencyCheck &&
+    (spinner.style.display = "none") &&
+    pageContainer.appendChild(page);
 };
 
 const createCard = ({ title, subtitle, content = "N/A", linkTo }) => {
