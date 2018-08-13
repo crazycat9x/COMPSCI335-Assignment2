@@ -20,7 +20,7 @@ const getUrls = {
   [categoryEnum.people]: {
     all: "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc/people",
     single: "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc/person?u=",
-    img: "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc/img?id=",
+    img: "https://unidirectory.auckland.ac.nz/",
     vcard: "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc/vcard?u="
   }
 };
@@ -30,11 +30,23 @@ const postComment = "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc";
 const applyToAll = (query, func) =>
   [...document.querySelectorAll(query)].forEach(func);
 
-const createHtmlElement = ({ type, id, className, content }) => {
-  const element = document.createElement(type || "div");
+const createHtmlElement = ({
+  type = "div",
+  id,
+  className,
+  content,
+  additionalAttr
+}) => {
+  const element = document.createElement(type);
   id && (element.id = id);
-  className && (element.className = className);
+  className && Array.isArray(className)
+    ? className.forEach(name => element.classList.add(name))
+    : element.classList.add(className);
   content && (element.innerHTML = content);
+  additionalAttr &&
+    Object.entries(additionalAttr).forEach(attr =>
+      element.setAttribute(attr[0], attr[1])
+    );
   return element;
 };
 
@@ -62,9 +74,8 @@ const navToPage = pageId => {
 };
 
 const createCard = ({ title, subtitle, content = "N/A", linkTo }) => {
-  const card = createHtmlElement({ type: "div", className: "card-section" });
+  const card = createHtmlElement({ className: "card-section" });
   const titleSection = createHtmlElement({
-    type: "div",
     className: "card-title"
   });
   if (linkTo) {
@@ -89,7 +100,6 @@ const createCard = ({ title, subtitle, content = "N/A", linkTo }) => {
   card.appendChild(titleSection);
   card.appendChild(
     createHtmlElement({
-      type: "div",
       className: "card-content",
       content: content
     })
@@ -97,13 +107,59 @@ const createCard = ({ title, subtitle, content = "N/A", linkTo }) => {
   return card;
 };
 
+const createProfileCard = ({ name, img, role, email, phoneNum, vcard }) => {
+  const card = createHtmlElement({ className: ["card-section", "profile"] });
+  const title = createHtmlElement({ className: "profile-title" });
+  const body = createHtmlElement({ className: "profile-content" });
+  title.appendChild(
+    createHtmlElement({
+      type: "img",
+      className: "ava",
+      additionalAttr: { src: img }
+    })
+  );
+  title.appendChild(createHtmlElement({ type: "h3", content: name }));
+  title.appendChild(createHtmlElement({ type: "h6", content: role }));
+  email &&
+    body.appendChild(
+      createHtmlElement({
+        className: "profile-email",
+        content: `&#x2709; <a href="mailto:${email}">${email}</a>`
+      })
+    );
+  phoneNum &&
+    body.appendChild(
+      createHtmlElement({
+        className: "profile-phone",
+        content: `&#9742; <a href="tel:${phoneNum}">${phoneNum}</a>`
+      })
+    );
+  body.appendChild(
+    createHtmlElement({
+      type: "form",
+      additionalAttr: { action: vcard }
+    }).appendChild(
+      createHtmlElement({
+        type: "button",
+        className: "vcard-button",
+        content: "download vcard"
+      })
+    )
+  );
+  card.appendChild(title);
+  card.appendChild(body);
+  return card;
+};
+
 const navToggleButton = document.getElementById("toggle-nav-button");
 
 navToggleButton.addEventListener("click", function() {
-  document.getElementById("main-nav").classList.toggle("open");
+  document.getElementById("main-nav").classList.toggle("active");
+  this.classList.toggle("active");
   [...this.children].forEach(child => {
-    child.classList.toggle("open");
+    child.classList.toggle("active");
   });
+  
 });
 
 // add event listener to nav buttons
@@ -116,38 +172,51 @@ navToggleButton.addEventListener("click", function() {
   })
 );
 
+const reqwest = (type, url, callback) =>
+  new Promise(resolve => {
+    const request = new XMLHttpRequest();
+    request.open(type, url, true);
+    request.setRequestHeader("Content-Type", "application/json");
+    request.setRequestHeader("Accept", "application/json");
+    request.onload = function() {
+      if (this.status >= 200 && this.status < 400) {
+        resolve(this.response);
+        callback && callback(this.response);
+      } else {
+        console.log(this.response);
+      }
+    };
+    request.send();
+  });
+
 Object.entries(getUrls).forEach(stateNameAndUrl => {
-  const request = new XMLHttpRequest();
-  request.open("GET", stateNameAndUrl[1].all, true);
-  request.setRequestHeader("Content-Type", "application/json");
-  request.setRequestHeader("Accept", "application/json");
-  request.onload = function() {
-    if (this.status >= 200 && this.status < 400) {
-      renderDataToPage(JSON.parse(this.response), stateNameAndUrl[0]);
-    } else {
-      console.log(this.response);
-    }
-  };
-  request.send();
+  reqwest("GET", stateNameAndUrl[1].all, data =>
+    renderDataToPage(JSON.parse(data), stateNameAndUrl[0])
+  );
 });
 
 function renderCoursesToPage(data) {
   data = data.data;
   const target = document.getElementById(categoryEnum.courses);
-  data.forEach(course => {
-    target.appendChild(
-      createCard({
-        title: `${course.subject} ${course.catalogNbr}`,
-        subtitle: course.titleLong,
-        content: course.description
-      })
+  data
+    .sort(
+      (a, b) =>
+        a.catalogNbr < b.catalogNbr ? -1 : a.catalogNbr > b.catalogNbr ? 1 : 0
+    )
+    .forEach(course =>
+      target.appendChild(
+        createCard({
+          title: `${course.subject} ${course.catalogNbr}`,
+          subtitle: course.titleLong,
+          content: course.description
+        })
+      )
     );
-  });
 }
 
 function renderNewsToPage(data) {
   const target = document.getElementById(categoryEnum.news);
-  data.forEach(newItem => {
+  data.forEach(newItem =>
     target.appendChild(
       createCard({
         title: newItem.titleField,
@@ -155,13 +224,13 @@ function renderNewsToPage(data) {
         content: newItem.descriptionField,
         linkTo: newItem.linkField
       })
-    );
-  });
+    )
+  );
 }
 
 function renderNoticesToPage(data) {
   const target = document.getElementById(categoryEnum.notices);
-  data.forEach(notice => {
+  data.forEach(notice =>
     target.appendChild(
       createCard({
         title: notice.titleField,
@@ -169,11 +238,29 @@ function renderNoticesToPage(data) {
         content: notice.descriptionField,
         linkTo: notice.linkField
       })
-    );
-  });
+    )
+  );
 }
 
-function renderPeopleToPage(data) {
-  console.log(data);
-  document.getElementById(categoryEnum.people).innerText = data;
+async function renderPeopleToPage(data) {
+  const target = document.getElementById(categoryEnum.people);
+  data = data.list;
+  for (const person of data) {
+    const details = JSON.parse(
+      await reqwest(
+        "GET",
+        `${getUrls[categoryEnum.people].single}${person.profileUrl[0]}`
+      )
+    );
+    target.appendChild(
+      createProfileCard({
+        name: `${person.title} ${person.names[0]}`,
+        img: `${getUrls[categoryEnum.people].img}${details.image}`,
+        role: person.jobtitles.join("</br>"),
+        email: person.emailAddresses[0],
+        phoneNum:
+          details.phoneNumbers.length != 0 && details.phoneNumbers[0].phone
+      })
+    );
+  }
 }

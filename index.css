@@ -17,6 +17,22 @@ h6 {
   margin: 0 0 3px 0;
 }
 
+button {
+  background-color: #0039a6;
+  color: white;
+  font-size: 18px;
+  border: none;
+  border-radius: 15px;
+  padding: 3px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+}
+
+button:active {
+  transform: translateY(2px);
+}
+
 :root {
   --main-color: #0039a6;
 }
@@ -29,18 +45,63 @@ h6 {
   justify-content: center;
   height: 100vh;
   background-color: #0039a6;
-  width: 20rem;
+  width: 15rem;
   top: 0;
-  left: -35%;
+  left: -15rem;
   opacity: 0;
   transition: 0.6s ease;
   box-shadow: 0 1px 1px 0 rgba(60, 64, 67, 0.08),
     0 1px 3px 1px rgba(60, 64, 67, 0.16);
 }
 
-#main-nav.open {
+#main-nav.active {
   left: 0;
   opacity: 100;
+}
+
+#toggle-nav-button {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 3;
+  padding: 15px;
+  font-size: 30px;
+  width: 35px;
+  height: 35px;
+  cursor: pointer;
+  background-color: var(--main-color);
+  border-radius: 50%;
+  box-shadow: 0 1px 1px 0 rgba(60, 64, 67, 0.08),
+    0 1px 3px 1px rgba(60, 64, 67, 0.16);
+}
+
+#toggle-nav-button.active {
+  border: none;
+  box-shadow: none;
+}
+
+#toggle-nav-button > div:nth-child(2) {
+  margin: 7px 0 7px 0;
+}
+
+#toggle-nav-button > div:nth-child(1).active {
+  top: 10px;
+  transform: rotate(45deg);
+  background-color: white;
+}
+
+#toggle-nav-button > div:nth-child(2).active {
+  display: none;
+  background-color: white;
+}
+
+#toggle-nav-button > div:nth-child(3).active {
+  top: 6px;
+  transform: rotate(135deg);
+  background-color: white;
 }
 
 .nav-item {
@@ -60,44 +121,13 @@ h6 {
     0 1px 3px 1px rgba(60, 64, 67, 0.16);
 }
 
-#toggle-nav-button {
-  position: fixed;
-  z-index: 3;
-  padding: 15px;
-  font-size: 30px;
-  width: 55px;
-  height: 55px;
-  cursor: pointer;
-}
-
 .nav-button-bar {
   display: block;
-  background-color: black;
+  background-color: white;
   position: relative;
   width: 100%;
   height: 4px;
   transition: 1s ease;
-}
-
-#toggle-nav-button > div:nth-child(2) {
-  margin: 7px 0 7px 0;
-}
-
-#toggle-nav-button > div:nth-child(1).open {
-  top: 10px;
-  transform: rotate(45deg);
-  background-color: white;
-}
-
-#toggle-nav-button > div:nth-child(2).open {
-  display: none;
-  background-color: white;
-}
-
-#toggle-nav-button > div:nth-child(3).open {
-  top: 6px;
-  transform: rotate(135deg);
-  background-color: white;
 }
 
 .card-section {
@@ -108,6 +138,10 @@ h6 {
   border-radius: 5px;
   box-shadow: 0 1px 1px 0 rgba(60, 64, 67, 0.08),
     0 1px 3px 1px rgba(60, 64, 67, 0.16);
+}
+
+.card-section.profile {
+  margin-top: 65px;
 }
 
 .card-section:hover {
@@ -125,6 +159,55 @@ h6 {
   position: relative;
 }
 
+.card-title.clickable {
+  cursor: pointer;
+}
+
+.card-title.clickable:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .card-content {
   padding: 10px;
+}
+
+.ava {
+  margin-top: -50px;
+  width: 100px;
+  height: 100px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  box-shadow: 0 1px 1px 0 rgba(60, 64, 67, 0.08),
+    0 1px 3px 1px rgba(60, 64, 67, 0.16);
+}
+
+.profile-title {
+  background-color: #0039a6;
+  display: flex;
+  color: white;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 5px 5px 0 0;
+  justify-content: flex-start;
+  text-align: center;
+}
+
+.profile-content {
+  padding: 10px;
+}
+
+.profile-content > *:not(:first-child) {
+  margin: 10px 0 0 0;
+}
+
+.vcard-button {
+  background-color: #0039a6;
+  color: white;
+  width: 100%;
+  font-size: 18px;
+  border: none;
+  border-radius: 15px;
+  padding: 3px;
+  text-align: center;
 }
