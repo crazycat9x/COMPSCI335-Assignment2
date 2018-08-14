@@ -70,9 +70,10 @@ const createHtmlElement = ({
 }) => {
   const element = document.createElement(type);
   id && (element.id = id);
-  className && Array.isArray(className)
-    ? className.forEach(name => element.classList.add(name))
-    : element.classList.add(className);
+  className &&
+    (Array.isArray(className)
+      ? className.forEach(name => element.classList.add(name))
+      : element.classList.add(className));
   switch (typeof content) {
     case "string":
       element.innerHTML = content;
@@ -294,8 +295,8 @@ const renderPeopleToPage = (data, page) => {
 const renderCommentsToPage = (data, page) => {
   [...data.querySelectorAll("p")]
     .map(comment => ({
-      author: comment.querySelector("b"),
-      message: comment.querySelector("em")
+      author: comment.querySelector("b").innerText,
+      message: comment.querySelector("em").innerText
     }))
     .forEach(comment => {
       page.appendChild(
