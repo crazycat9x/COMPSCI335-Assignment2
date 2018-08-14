@@ -94,8 +94,9 @@ const navToPage = async pageName => {
   let data;
   pageContainer.innerHTML = "";
   title.innerText = pageName;
+  applyToAll(".nav-item", e => e.classList.remove("active"));
+  document.getElementById(`link-to-${pageName}`).classList.add("active")
   spinner.style.display = "block";
-  applyToAll(".nav-button", e => e.classList.remove("active"));
   switch (pageName) {
     case categoryEnum.home:
       renderHomePage(page);
@@ -319,8 +320,6 @@ Object.keys(categoryEnum).forEach(cat => {
     content: cat
   });
   button.addEventListener("click", function() {
-    applyToAll(".nav-item", e => e.classList.remove("active"));
-    this.classList.add("active");
     navToPage(cat);
     navToggleButton.click();
   });
