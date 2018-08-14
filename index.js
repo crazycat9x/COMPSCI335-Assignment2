@@ -206,6 +206,8 @@ const createProfileCard = ({ name, img, role, email, phoneNum, vcard }) => {
   return card;
 };
 
+// SECTION: Page renders
+
 const renderHomePage = page => {
   page.appendChild(
     createHtmlElement({
@@ -303,10 +305,13 @@ const renderCommentsToPage = (data, page) => {
     });
 };
 
+// SECTION: initialize
+
 // add event listener to navigation toggle button
 navToggleButton.addEventListener("click", function() {
-  mainNavBar.classList.toggle("active");
-  this.classList.toggle("active");
+  mainNavBar.classList.toggle("active")
+    ? this.classList.add("active")
+    : this.classList.remove("active");
   [...this.children].forEach(child => {
     child.classList.toggle("active");
   });
