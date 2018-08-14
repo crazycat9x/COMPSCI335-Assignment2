@@ -172,6 +172,7 @@ button:active {
   justify-content: center;
   align-items: center;
   padding: 0 10px 0 10px;
+  overflow: auto;
 }
 
 #modal.active {
