@@ -95,7 +95,7 @@ const navToPage = async pageName => {
   pageContainer.innerHTML = "";
   title.innerText = pageName;
   applyToAll(".nav-item", e => e.classList.remove("active"));
-  document.getElementById(`link-to-${pageName}`).classList.add("active")
+  document.getElementById(`link-to-${pageName}`).classList.add("active");
   spinner.style.display = "block";
   switch (pageName) {
     case categoryEnum.home:
