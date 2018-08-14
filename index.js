@@ -48,6 +48,7 @@ const reqwest = (type, url, data = null, async = true) =>
     const request = new XMLHttpRequest();
     request.open(type, url, async);
     request.setRequestHeader("Accept", "application/json");
+    request.setRequestHeader("Content-Type", "application/json");
     request.onload = function() {
       if (this.status >= 200 && this.status < 400) {
         resolve(this.response);
@@ -209,6 +210,53 @@ const createProfileCard = ({ name, img, role, email, phoneNum, vcard }) => {
   return card;
 };
 
+const createTextInputBox = (
+  inputBoxId,
+  onSubmit,
+  title,
+  placeholder = "Type a message..."
+) => {
+  const inputWrapper = createHtmlElement({ id: inputBoxId });
+  const inputBody = createHtmlElement({
+    className: "input-body",
+    id: `${inputBoxId}-body`
+  });
+  const submitButton = createHtmlElement({
+    type: "button",
+    className: "input-box-submit",
+    id: `${inputBoxId}-submit`,
+    content: "Send"
+  });
+  const textField = createHtmlElement({
+    type: "textarea",
+    className: "input-box-textarea",
+    id: `${inputBoxId}-textarea`,
+    additionalAttr: { placeholder: placeholder, required: "required" }
+  });
+  submitButton.addEventListener("click", () => {
+    onSubmit(textField.value.trim());
+    textField.value = "";
+  });
+  if (title) {
+    const titleWrapper = createHtmlElement({
+      className: "input-title-wrapper",
+      id: `${inputBoxId}-title-wrapper`
+    });
+    titleWrapper.appendChild(
+      createHtmlElement({
+        className: "input-box-title",
+        id: `${inputBoxId}-title`,
+        content: title
+      })
+    );
+    inputWrapper.appendChild(titleWrapper);
+  }
+  inputBody.appendChild(textField);
+  inputBody.appendChild(submitButton);
+  inputWrapper.appendChild(inputBody);
+  return inputWrapper;
+};
+
 // SECTION: Page renders
 
 const renderHomePage = page => {
@@ -293,18 +341,52 @@ const renderPeopleToPage = (data, page) => {
 };
 
 const renderCommentsToPage = (data, page) => {
+  page.appendChild(
+    createTextInputBox(
+      "comment-box",
+      value => {
+        const name = document.getElementById("user-name").value.trim();
+        name &&
+          value &&
+          reqwest(
+            "POST",
+            `${getUrls[categoryEnum.comments].post}${name}`,
+            JSON.stringify(`"${value}"`)
+          )
+            .then(response => JSON.parse(response))
+            .then(data =>
+              document.getElementById("comment-box").insertAdjacentHTML(
+                "afterend",
+                `<div class="comment">
+                <div class="comment-author">${name}</div>
+                <div class="comment-content">${data}</div>
+                </div>`
+              )
+            );
+      },
+      "comment as <input id='user-name' required>"
+    )
+  );
   [...data.querySelectorAll("p")]
     .map(comment => ({
       author: comment.querySelector("b").innerText,
-      message: comment.querySelector("em").innerText
+      content: comment.querySelector("em").innerText
     }))
     .forEach(comment => {
-      page.appendChild(
-        createHtmlElement({ type: "h3", content: comment.author })
+      commentWrapper = createHtmlElement({ className: "comment" });
+      commentWrapper.appendChild(
+        createHtmlElement({
+          className: "comment-author",
+          content: comment.author
+        })
       );
-      page.appendChild(
-        createHtmlElement({ type: "h5", content: comment.message })
+      commentWrapper.appendChild(
+        createHtmlElement({
+          className: "comment-content",
+          content: comment.content
+        })
       );
+      page.appendChild(commentWrapper);
     });
 };
 
