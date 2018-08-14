@@ -94,6 +94,8 @@ const navToPage = async pageName => {
   let data;
   pageContainer.innerHTML = "";
   title.innerText = pageName;
+  navToggleButton.classList.remove("active");
+  mainNavBar.classList.remove("active");
   applyToAll(".nav-item", e => e.classList.remove("active"));
   document.getElementById(`link-to-${pageName}`).classList.add("active");
   spinner.style.display = "block";
@@ -326,7 +328,6 @@ Object.keys(categoryEnum).forEach(cat => {
   });
   button.addEventListener("click", function() {
     navToPage(cat);
-    navToggleButton.click();
   });
   mainNavBar.appendChild(button);
 });
