@@ -314,9 +314,6 @@ navToggleButton.addEventListener("click", function() {
   mainNavBar.classList.toggle("active")
     ? this.classList.add("active")
     : this.classList.remove("active");
-  [...this.children].forEach(child => {
-    child.classList.toggle("active");
-  });
 });
 
 // create navigation items

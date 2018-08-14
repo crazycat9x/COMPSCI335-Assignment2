@@ -107,18 +107,18 @@ button:active {
   margin: 7px 0 7px 0;
 }
 
-#toggle-nav-button > div:nth-child(1).active {
+#toggle-nav-button.active > div:nth-child(1) {
   top: 10px;
   transform: rotate(45deg);
   background-color: white;
 }
 
-#toggle-nav-button > div:nth-child(2).active {
+#toggle-nav-button.active > div:nth-child(2) {
   display: none;
   background-color: white;
 }
 
-#toggle-nav-button > div:nth-child(3).active {
+#toggle-nav-button.active > div:nth-child(3) {
   top: 6px;
   transform: rotate(135deg);
   background-color: white;
@@ -160,7 +160,8 @@ button:active {
   z-index: -1;
 }
 
-.big-title, .big-subtitle {
+.big-title,
+.big-subtitle {
   text-align: center;
 }
 
