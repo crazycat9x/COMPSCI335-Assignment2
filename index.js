@@ -277,14 +277,14 @@ const createTable = (body, header) => {
     table.appendChild(
       createHtmlElement({
         type: "thead",
-        content: header.map(th => `<th>${th}</th>`).join()
+        content: header.map(th => `<th>${th}</th>`).join("")
       })
     );
   body.forEach(tr =>
     table.appendChild(
       createHtmlElement({
         type: "tr",
-        content: tr.map(td => `<td>${td}</td>`).join()
+        content: tr.map(td => `<td>${td}</td>`).join("")
       })
     )
   );
