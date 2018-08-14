@@ -4,7 +4,7 @@ const categoryEnum = Object.freeze({
   news: "news",
   notices: "notices",
   people: "people",
-  comments: "comments"
+  comments: "guest book"
 });
 
 const getUrls = {
@@ -40,6 +40,8 @@ const pageTitle = document.getElementById("title");
 const pageContainer = document.getElementById("page-container");
 const mainNavBar = document.getElementById("main-nav");
 const navToggleButton = document.getElementById("toggle-nav-button");
+const modal = document.getElementById("modal");
+const modalContent = document.getElementById("modal-content");
 const spinner = document.getElementById("spinner");
 let concurrencyCheck = 0;
 
@@ -132,7 +134,16 @@ const navToPage = async pageName => {
     pageContainer.appendChild(page);
 };
 
-const createCard = ({ title, subtitle, content = "N/A", linkTo }) => {
+const openModalWithData = data => {
+  modalContent.innerHTML = "";
+  console.log(data);
+  typeof data == "string"
+    ? (modalContent.innerHTML = data)
+    : modalContent.appendChild(data);
+  modal.classList.add("active");
+};
+
+const createCard = ({ title, subtitle, content = "N/A", linkTo, action }) => {
   const card = createHtmlElement({ className: "card-section" });
   const titleSection = createHtmlElement({
     className: "card-title"
@@ -140,6 +151,9 @@ const createCard = ({ title, subtitle, content = "N/A", linkTo }) => {
   if (linkTo) {
     content = `${content}</br><a href=${linkTo}>see more</a>`;
     titleSection.addEventListener("click", () => (window.location = linkTo));
+    titleSection.classList.add("clickable");
+  } else if (action) {
+    titleSection.addEventListener("click", () => action());
     titleSection.classList.add("clickable");
   }
   titleSection.appendChild(
@@ -257,6 +271,26 @@ const createTextInputBox = (
   return inputWrapper;
 };
 
+const createTable = (body, header) => {
+  const table = createHtmlElement({ type: "table" });
+  header &&
+    table.appendChild(
+      createHtmlElement({
+        type: "thead",
+        content: header.map(th => `<th>${th}</th>`).join()
+      })
+    );
+  body.forEach(tr =>
+    table.appendChild(
+      createHtmlElement({
+        type: "tr",
+        content: tr.map(td => `<td>${td}</td>`).join()
+      })
+    )
+  );
+  return table;
+};
+
 // SECTION: Page renders
 
 const renderHomePage = page => {
@@ -288,7 +322,26 @@ const renderCoursesToPage = (data, page) =>
         createCard({
           title: `${course.subject} ${course.catalogNbr}`,
           subtitle: course.titleLong,
-          content: course.description
+          content: course.description,
+          action: () =>
+            reqwest(
+              "GET",
+              `${getUrls[categoryEnum.courses].single}${course.catalogNbr}`
+            ).then(response =>
+              openModalWithData(
+                createTable(
+                  JSON.parse(response).data.map(e => [
+                    e.classSection,
+                    e.component,
+                    e.meetingPatterns
+                      .map(e => `${e.daysOfWeek} ${e.startTime} - ${e.endTime}`)
+                      .join("</br>"),
+                    e.classStatus
+                  ]),
+                  ["class", "type", "time", "status"]
+                )
+              )
+            )
         })
       )
     );
