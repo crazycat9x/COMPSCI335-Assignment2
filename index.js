@@ -400,7 +400,7 @@ navToggleButton.addEventListener("click", function() {
 });
 
 // create navigation items
-Object.keys(categoryEnum).forEach(cat => {
+Object.values(categoryEnum).forEach(cat => {
   const button = createHtmlElement({
     className: "nav-item",
     id: `link-to-${cat}`,
