@@ -256,7 +256,8 @@ const createTextInputBox = (
     id: `${inputBoxId}-textarea`,
     additionalAttr: { placeholder: placeholder }
   });
-  submitButton.addEventListener("click", () => {
+  submitButton.addEventListener("click", event => {
+    event.preventDefault();
     onSubmit(textField.value.trim());
     textField.value = "";
   });
@@ -431,7 +432,7 @@ const renderCommentsToPage = (data, page) => {
           reqwest(
             "POST",
             `${getUrls[categoryEnum.comments].post}${name}`,
-            JSON.stringify(`"${value}"`)
+            JSON.stringify(value)
           )
             .then(response => JSON.parse(response))
             .then(data =>
