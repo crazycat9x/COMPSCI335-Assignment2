@@ -211,15 +211,15 @@ th {
 #modal-content {
   width: 100%;
   max-height: 100%;
-  padding: 90px 0 90px 0;
 }
 
 #modal-close-button {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  position: -webkit-sticky; /* Safari */
   position: sticky;
-  top: 20px;
+  top: 0;
   left: calc(100% - 70px);
   z-index: 5;
   padding: 15px;
