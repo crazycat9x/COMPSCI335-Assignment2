@@ -40,6 +40,30 @@ button:active {
   transform: translateY(2px);
 }
 
+table,
+th,
+td {
+  border: none;
+}
+
+table {
+  display: table;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+thead {
+  border-bottom: 1px solid #d0d0d0;
+}
+
+td,
+th {
+  padding: 15px 5px;
+  display: table-cell;
+  vertical-align: middle;
+  border-radius: 2px;
+}
+
 #title-bar {
   background-color: var(--secondary-color);
   color: white;
@@ -137,7 +161,7 @@ button:active {
   width: 60px;
   height: 60px;
   margin: -40px 0 0 -40px;
-  border: 10px solid var(--main-color);
+  border: 10px solid var(--secondary-color);
   border-right-color: transparent;
   border-radius: 50%;
   animation: spin 1.5s ease infinite;
@@ -160,23 +184,30 @@ button:active {
 }
 
 #modal {
-  display: none;
   position: fixed;
   z-index: 4;
   top: 0;
-  left: 0;
+  left: 100%;
   width: calc(100% - 20px);
   height: 100%;
   background-color: white;
-  /* display: flex; */
+  opacity: 0;
   justify-content: center;
   align-items: center;
   padding: 0 10px 0 10px;
-  overflow: auto;
+  overflow-y: auto;
+  transition: 0.6s ease;
 }
 
 #modal.active {
-  display: flex;
+  opacity: 100;
+  left: 0;
+}
+
+#modal-content {
+  width: 100%;
+  max-height: 100%;
+  padding: 90px 0 90px 0;
 }
 
 #modal-close-button {
@@ -185,7 +216,7 @@ button:active {
   justify-content: center;
   position: fixed;
   top: 20px;
-  right: 20px;
+  right: 0;
   z-index: 5;
   padding: 15px;
   font-size: 30px;
@@ -397,4 +428,9 @@ button:active {
   vertical-align: top;
   border-radius: 0 5px 5px 0;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+#timetable {
+  width: 100%;
+  text-align: center;
 }

@@ -36,12 +36,14 @@ const getUrls = {
 
 const parser = new DOMParser();
 const postComment = "http://redsox.uoa.auckland.ac.nz/ups/UniProxService.svc";
+const pageBody = document.querySelector("body");
 const pageTitle = document.getElementById("title");
 const pageContainer = document.getElementById("page-container");
 const mainNavBar = document.getElementById("main-nav");
 const navToggleButton = document.getElementById("toggle-nav-button");
 const modal = document.getElementById("modal");
 const modalContent = document.getElementById("modal-content");
+const modalCloseButton = document.getElementById("modal-close-button");
 const spinner = document.getElementById("spinner");
 let concurrencyCheck = 0;
 
@@ -140,7 +142,13 @@ const openModalWithData = data => {
   typeof data == "string"
     ? (modalContent.innerHTML = data)
     : modalContent.appendChild(data);
+  pageBody.style.overflowY = "hidden";
   modal.classList.add("active");
+};
+
+const closeModal = () => {
+  pageBody.style.overflowY = "auto";
+  modal.classList.remove("active");
 };
 
 const createCard = ({ title, subtitle, content = "N/A", linkTo, action }) => {
@@ -230,7 +238,7 @@ const createTextInputBox = (
   title,
   placeholder = "Type a message..."
 ) => {
-  const inputWrapper = createHtmlElement({ id: inputBoxId });
+  const inputWrapper = createHtmlElement({ type: "form", id: inputBoxId });
   const inputBody = createHtmlElement({
     className: "input-body",
     id: `${inputBoxId}-body`
@@ -245,7 +253,7 @@ const createTextInputBox = (
     type: "textarea",
     className: "input-box-textarea",
     id: `${inputBoxId}-textarea`,
-    additionalAttr: { placeholder: placeholder, required: "required" }
+    additionalAttr: { placeholder: placeholder }
   });
   submitButton.addEventListener("click", () => {
     onSubmit(textField.value.trim());
@@ -271,20 +279,34 @@ const createTextInputBox = (
   return inputWrapper;
 };
 
-const createTable = (body, header) => {
-  const table = createHtmlElement({ type: "table" });
+const createTable = (body, header, tableId, columnId = header) => {
+  const table = createHtmlElement({ type: "table", id: tableId });
   header &&
     table.appendChild(
       createHtmlElement({
         type: "thead",
-        content: header.map(th => `<th>${th}</th>`).join("")
+        content: header
+          .map(
+            (th, i) =>
+              `<th class="column-${columnId[i]
+                .split(" ")
+                .join("-")}">${th}</th>`
+          )
+          .join("")
       })
     );
   body.forEach(tr =>
     table.appendChild(
       createHtmlElement({
         type: "tr",
-        content: tr.map(td => `<td>${td}</td>`).join("")
+        content: tr
+          .map(
+            (td, i) =>
+              `<td class="column-${columnId[i]
+                .split(" ")
+                .join("-")}">${td}</td>`
+          )
+          .join("")
       })
     )
   );
@@ -323,11 +345,12 @@ const renderCoursesToPage = (data, page) =>
           title: `${course.subject} ${course.catalogNbr}`,
           subtitle: course.titleLong,
           content: course.description,
-          action: () =>
+          action: () => {
+            spinner.style.display = "block";
             reqwest(
               "GET",
               `${getUrls[categoryEnum.courses].single}${course.catalogNbr}`
-            ).then(response =>
+            ).then(response => {
               openModalWithData(
                 createTable(
                   JSON.parse(response).data.map(e => [
@@ -336,12 +359,15 @@ const renderCoursesToPage = (data, page) =>
                     e.meetingPatterns
                       .map(e => `${e.daysOfWeek} ${e.startTime} - ${e.endTime}`)
                       .join("</br>"),
-                    e.classStatus
+                    e.enrolCap - e.enrolTotal > 0 ? "&#x1F389;" : "closed"
                   ]),
-                  ["class", "type", "time", "status"]
+                  ["class", "type", "time & dates", "status"],
+                  "timetable"
                 )
-              )
-            )
+              );
+              spinner.style.display = "none";
+            });
+          }
         })
       )
     );
@@ -417,7 +443,7 @@ const renderCommentsToPage = (data, page) => {
               )
             );
       },
-      "comment as <input id='user-name' required>"
+      "comment as <input id='user-name' required='required'>"
     )
   );
   [...data.querySelectorAll("p")]
@@ -445,12 +471,14 @@ const renderCommentsToPage = (data, page) => {
 
 // SECTION: initialize
 
-// add event listener to navigation toggle button
+// add event listener to meny and modal buttons
 navToggleButton.addEventListener("click", function() {
   mainNavBar.classList.toggle("active")
     ? this.classList.add("active")
     : this.classList.remove("active");
 });
+
+modalCloseButton.addEventListener("click", closeModal);
 
 // create navigation items
 Object.values(categoryEnum).forEach(cat => {
