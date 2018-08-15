@@ -213,7 +213,7 @@ const createProfileCard = ({ name, img, role, email, phoneNum, vcard }) => {
     body.appendChild(
       createHtmlElement({
         className: "profile-phone",
-        content: `&#9742; <a href="tel:${phoneNum}">${phoneNum}</a>`
+        content: `&#x1F4F1; <a href="tel:${phoneNum}">${phoneNum}</a>`
       })
     );
   body.appendChild(
