@@ -138,6 +138,7 @@ const navToPage = async pageName => {
 
 const openModalWithData = data => {
   modalContent.innerHTML = "";
+  modalContent.scrollTo(0, 0);
   console.log(data);
   typeof data == "string"
     ? (modalContent.innerHTML = data)
