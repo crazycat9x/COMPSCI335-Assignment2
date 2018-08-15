@@ -183,6 +183,10 @@ th {
   z-index: -1;
 }
 
+#logo {
+  cursor: pointer;
+}
+
 #modal {
   position: fixed;
   z-index: 4;
@@ -214,9 +218,9 @@ th {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  position: fixed;
+  position: sticky;
   top: 20px;
-  right: 0;
+  left: calc(100% - 70px);
   z-index: 5;
   padding: 15px;
   font-size: 30px;

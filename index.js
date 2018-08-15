@@ -478,8 +478,6 @@ navToggleButton.addEventListener("click", function() {
     : this.classList.remove("active");
 });
 
-modalCloseButton.addEventListener("click", closeModal);
-
 // create navigation items
 Object.values(categoryEnum).forEach(cat => {
   const button = createHtmlElement({
