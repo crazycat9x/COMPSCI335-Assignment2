@@ -492,6 +492,7 @@ Object.values(categoryEnum).forEach(cat => {
   mainNavBar.appendChild(button);
 });
 
+// set up home page
 document.getElementById("link-to-home").classList.toggle("active");
 title.innerText = "home";
 renderHomePage(pageContainer);
