@@ -431,7 +431,7 @@ const renderCommentsToPage = (data, page) => {
           reqwest(
             "POST",
             `${getUrls[categoryEnum.comments].post}${name}`,
-            JSON.stringify(value)
+            JSON.stringify(`"${value}"`)
           )
             .then(response => JSON.parse(response))
             .then(data =>
