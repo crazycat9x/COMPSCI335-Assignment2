@@ -218,15 +218,13 @@ const createProfileCard = ({ name, img, role, email, phoneNum, vcard }) => {
     );
   body.appendChild(
     createHtmlElement({
-      type: "form",
-      additionalAttr: { action: vcard }
-    }).appendChild(
-      createHtmlElement({
-        type: "button",
-        className: "vcard-button",
-        content: "download vcard"
-      })
-    )
+      type: "button",
+      className: "vcard-button",
+      content: "download vcard",
+      additionalAttr: {
+        onclick: `location.href="${getUrls[categoryEnum.people].vcard}${vcard}"`
+      }
+    })
   );
   card.appendChild(title);
   card.appendChild(body);
@@ -413,7 +411,8 @@ const renderPeopleToPage = (data, page) => {
             role: person.jobtitles.join("</br>"),
             email: person.emailAddresses[0],
             phoneNum:
-              details.phoneNumbers.length != 0 && details.phoneNumbers[0].phone
+              details.phoneNumbers.length != 0 && details.phoneNumbers[0].phone,
+            vcard: person.profileUrl[0]
           })
         )
       )
