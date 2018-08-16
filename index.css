@@ -445,6 +445,12 @@ th {
   #page-container {
     padding: 20px 40px 20px 40px;
   }
+  #main-nav {
+    width: 25rem;
+  }
+  .nav-item {
+    font-size: 3.5rem;
+  }
   #page-container.courses-page,
   #page-container.news-page,
   #page-container.notices-page,
