@@ -200,7 +200,7 @@ th {
   align-items: center;
   padding: 0 10px 0 10px;
   overflow-y: auto;
-  transition: 0.6s ease;
+  transition: 1s ease;
 }
 
 #modal.active {
@@ -447,6 +447,14 @@ th {
   }
   #main-nav {
     width: 25rem;
+    left: -25rem;
+  }
+  #modal {
+    left: 0;
+    top: 100%;
+  }
+  #modal.active {
+    top: 0;
   }
   .nav-item {
     font-size: 3.5rem;
@@ -460,15 +468,3 @@ th {
     grid-gap: 15px;
   }
 }
-
-/* @media only screen and (min-width: 768px) {
-  #page-container {
-    padding: 50px 150px 50px 120px;
-  }
-  #page-container.courses-page,
-  #page-container.news-page,
-  #page-container.notices-page,
-  #page-container.people-page {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-} */

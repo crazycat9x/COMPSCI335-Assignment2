@@ -473,7 +473,7 @@ const renderCommentsToPage = (data, page) => {
 
 // SECTION: initialize
 
-// add event listener to meny and modal buttons
+// add event listener to menu and modal buttons
 navToggleButton.addEventListener("click", function() {
   mainNavBar.classList.toggle("active")
     ? this.classList.add("active")
