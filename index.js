@@ -133,7 +133,8 @@ const navToPage = async pageName => {
   }
   thisLoadCheck == concurrencyCheck &&
     (spinner.style.display = "none") &&
-    pageContainer.appendChild(page);
+    pageContainer.appendChild(page) &&
+    (pageContainer.classList = `${pageName}-page`);
 };
 
 const openModalWithData = data => {
@@ -144,7 +145,7 @@ const openModalWithData = data => {
     ? (modalContent.innerHTML = data)
     : modalContent.appendChild(data);
   pageBody.style.overflowY = "hidden";
-  modal.classList.add("active");
+  modal.className = `${page}`;
 };
 
 const closeModal = () => {

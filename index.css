@@ -286,6 +286,7 @@ th {
 
 .card-section {
   /* min-height: 266px; */
+  width: 100%;
   background-color: white;
   margin-bottom: 36px;
   padding: 0;
@@ -297,6 +298,8 @@ th {
 
 .card-section.profile {
   margin-top: 65px;
+  display: flex;
+  flex-direction: column;
 }
 
 .card-section:hover {
@@ -350,6 +353,10 @@ th {
 
 .profile-content {
   padding: 10px;
+  flex: 1 1 auto;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: column;
 }
 
 .profile-content > *:not(:first-child) {
@@ -386,12 +393,7 @@ th {
 }
 
 #comment-box {
-  width: 100vw;
-  position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
+  width: 100%;
   margin-bottom: 10px;
 }
 
@@ -414,7 +416,7 @@ th {
   border-color: #e2e2e2;
   border-radius: 5px 0 0 5px;
   padding: 7px;
-  height: 100%;
+  height: 50px;
   overflow-y: auto;
 }
 
@@ -438,3 +440,29 @@ th {
   width: 100%;
   text-align: center;
 }
+
+@media only screen and (min-width: 600px) {
+  #page-container {
+    padding: 20px 40px 20px 40px;
+  }
+  #page-container.courses-page,
+  #page-container.news-page,
+  #page-container.notices-page,
+  #page-container.people-page {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-gap: 15px;
+  }
+}
+
+/* @media only screen and (min-width: 768px) {
+  #page-container {
+    padding: 50px 150px 50px 120px;
+  }
+  #page-container.courses-page,
+  #page-container.news-page,
+  #page-container.notices-page,
+  #page-container.people-page {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+} */
