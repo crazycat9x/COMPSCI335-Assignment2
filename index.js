@@ -131,10 +131,11 @@ const navToPage = async pageName => {
       renderCommentsToPage(data, page);
       break;
   }
-  thisLoadCheck == concurrencyCheck &&
-    (spinner.style.display = "none") &&
-    pageContainer.appendChild(page) &&
-    (pageContainer.classList = `${pageName}-page`);
+  if (thisLoadCheck == concurrencyCheck) {
+    spinner.style.display = "none";
+    pageContainer.classList = `${pageName}-page`;
+    pageContainer.appendChild(page);
+  }
 };
 
 const openModalWithData = data => {
