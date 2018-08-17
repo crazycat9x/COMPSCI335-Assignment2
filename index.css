@@ -441,20 +441,13 @@ th {
   text-align: center;
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 576px) {
   #page-container {
     padding: 20px 40px 20px 40px;
   }
   #main-nav {
     width: 25rem;
     left: -25rem;
-  }
-  #modal {
-    left: 0;
-    top: 100%;
-  }
-  #modal.active {
-    top: 0;
   }
   .nav-item {
     font-size: 3.5rem;
@@ -466,5 +459,15 @@ th {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     grid-gap: 15px;
+  }
+}
+
+@media (min-width: 768px) {
+  #modal {
+    left: 0;
+    top: 100%;
+  }
+  #modal.active {
+    top: 0;
   }
 }

@@ -54,11 +54,9 @@ const reqwest = (type, url, data = null, async = true) =>
     request.setRequestHeader("Accept", "application/json");
     request.setRequestHeader("Content-Type", "application/json");
     request.onload = function() {
-      if (this.status >= 200 && this.status < 400) {
-        resolve(this.response);
-      } else {
-        reject(this.response);
-      }
+      this.status >= 200 && this.status < 400
+        ? resolve(this.response)
+        : reject(this.response);
     };
     request.send(data);
   });
@@ -99,7 +97,7 @@ const navToPage = async pageName => {
   const thisLoadCheck = ++concurrencyCheck;
   let data;
   pageContainer.innerHTML = "";
-  title.innerText = pageName;
+  pageTitle.innerText = pageName;
   navToggleButton.classList.remove("active");
   mainNavBar.classList.remove("active");
   applyToAll(".nav-item", e => e.classList.remove("active"));
@@ -495,5 +493,5 @@ Object.values(categoryEnum).forEach(cat => {
 
 // set up home page
 document.getElementById("link-to-home").classList.toggle("active");
-title.innerText = "home";
+pageTitle.innerText = "home";
 renderHomePage(pageContainer);
