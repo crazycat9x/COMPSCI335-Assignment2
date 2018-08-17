@@ -358,7 +358,9 @@ const renderCoursesToPage = (data, page) =>
                     e.meetingPatterns
                       .map(e => `${e.daysOfWeek} ${e.startTime} - ${e.endTime}`)
                       .join("</br>"),
-                    e.enrolCap - e.enrolTotal > 0 ? "&#x1F389;" : "closed"
+                    e.enrolCap - e.enrolTotal > 0
+                      ? `<span style="font-size: xx-large;">&#x1F389;</span`
+                      : "closed"
                   ]),
                   ["class", "type", "time & dates", "status"],
                   "timetable"
