@@ -357,9 +357,13 @@ const renderCoursesToPage = (data, page) =>
                   JSON.parse(response).data.map(e => [
                     e.classSection,
                     e.component,
-                    e.meetingPatterns
-                      .map(e => `${e.daysOfWeek} ${e.startTime} - ${e.endTime}`)
-                      .join("</br>"),
+                    [
+                      ...new Set(
+                        e.meetingPatterns.map(
+                          e => `${e.daysOfWeek} ${e.startTime} - ${e.endTime}`
+                        )
+                      )
+                    ].join("</br>"),
                     e.enrolCap - e.enrolTotal > 0
                       ? `<span style="font-size: xx-large;">&#x1F389;</span`
                       : "closed"
