@@ -132,7 +132,7 @@ const navToPage = async pageName => {
   }
   if (thisLoadCheck == concurrencyCheck) {
     spinner.style.display = "none";
-    pageContainer.classList = `${pageName}-page`;
+    pageContainer.className = `${pageName}-page`;
     pageContainer.appendChild(page);
   }
 };
