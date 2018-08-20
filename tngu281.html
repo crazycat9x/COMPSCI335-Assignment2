@@ -6,13 +6,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Page Title</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="shortcut icon" href="http://redsox.uoa.auckland.ac.nz/ups/logo-115x115.png" type="image/x-icon">
   <link rel="stylesheet" type="text/css" media="screen" href="tngu281.css" />
 </head>
 
 <body>
   <div id="title-bar">
     <div id="title"></div>
-    <img id="logo" src="http://redsox.uoa.auckland.ac.nz/ups/logo.svg" alt="logo" onclick="navToPage('home')">
+    <img id="logo" src="http://redsox.uoa.auckland.ac.nz/ups/logo.svg" alt="logo">
   </div>
   <nav id="main-nav"></nav>
   <div id="toggle-nav-button">
@@ -22,8 +23,9 @@
   </div>
   <div id="page-container"></div>
   <div id="spinner"></div>
-  <svg id="auckland" version="1.1" id="Слой_2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-    x="0px" y="0px" viewBox="0 195 1590 627.9" enable-background="new 0 195 1590 627.9" xml:space="preserve">
+  <!-- External svg image source: http://www.supercoloring.com/silhouettes/auckland-skyline -->
+  <svg id="auckland" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+    viewBox="0 195 1590 627.9" enable-background="new 0 195 1590 627.9" xml:space="preserve">
     <path fill="#1E90FF" d="M1577,669.6v-9.1l-11.5-1v-5.8h-9.5l-4.8,5.8
 	l-11-0.6l-7.6,0.6v8.6l-4.4,1l-3.9,3.9v31.6h-13V695h-16.4l-5.8-5.4l-9.1,1v4.4h-10.1V580.1l-12.4,0.6l-13.9,13.4l-11.5-6.4
 	l-19.6-1.5V605l-8.1,0.6v71.1l-13-0.6v-121l-23.1-0.6v-13.4l-54.3,0.6V659h-55.5l-2.5-3.5l-7.2-1l-2.9-6.6l-7.6-1.9v-11l-52.3,2.5
@@ -45,7 +47,7 @@
 	C861.5,501.8,856.8,505,856.1,506.1z M917.9,512.3l-0.7-9.7c0,0,3.7-0.6,7.5-1.4V512L917.9,512.3z" />
   </svg>
   <div id="modal">
-    <div id=modal-close-button onclick="closeModal()">
+    <div id=modal-close-button>
       <div class="modal-button-bar"></div>
       <div class="modal-button-bar"></div>
     </div>

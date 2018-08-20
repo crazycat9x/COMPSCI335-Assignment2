@@ -45,6 +45,7 @@ const modal = document.getElementById("modal");
 const modalContent = document.getElementById("modal-content");
 const modalCloseButton = document.getElementById("modal-close-button");
 const spinner = document.getElementById("spinner");
+const pageLogo = document.getElementById("logo");
 let concurrencyCheck = 0;
 
 const reqwest = (type, url, data = null, async = true) =>
@@ -138,10 +139,11 @@ const navToPage = async pageName => {
 
 const openModalWithData = data => {
   modalContent.innerHTML = "";
-  modalContent.scrollTo(0, 0);
   typeof data == "string"
     ? (modalContent.innerHTML = data)
     : modalContent.appendChild(data);
+  modalContent.appendChild(data);
+  modalContent.scrollIntoView();
   pageBody.style.overflowY = "hidden";
   modal.classList.add("active");
 };
@@ -480,6 +482,10 @@ navToggleButton.addEventListener("click", function() {
     : this.classList.remove("active");
 });
 
+modalCloseButton.addEventListener("click", () => closeModal());
+
+pageLogo.addEventListener("click", () => navToPage(categoryEnum.home));
+
 // create navigation items
 Object.values(categoryEnum).forEach(cat => {
   const button = createHtmlElement({
@@ -487,13 +493,9 @@ Object.values(categoryEnum).forEach(cat => {
     id: `link-to-${cat}`,
     content: cat
   });
-  button.addEventListener("click", function() {
-    navToPage(cat);
-  });
+  button.addEventListener("click", () => navToPage(cat));
   mainNavBar.appendChild(button);
 });
 
 // set up home page
-document.getElementById("link-to-home").classList.toggle("active");
-pageTitle.innerText = "home";
-renderHomePage(pageContainer);
+navToPage(categoryEnum.home);
